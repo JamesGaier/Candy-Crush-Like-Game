@@ -53,6 +53,5 @@ def loop():
 
         draw()
 
-pygame.display.flip()
 if __name__ == "__main__":
     loop()
