@@ -5,20 +5,12 @@ import pygame
 
 
 class SpriteSheet:
-    def __init__(self, path, scale):
-        self.sprite_sheet = pygame.image.load(path)
+    def __init__(self, path, scale, positions):
+        self.sprite_sheet = pygame.image.load(path).convert()
         self.sprite_sheet = pygame.transform.scale(self.sprite_sheet, scale)
         self.sheet_rect = self.sprite_sheet.get_rect()
         self.sheet_rect.topleft = (0,0)
-        # x, y, l, w
-        self.sprite_positions = [
-            pygame.Rect(0,0,63,75), # red fish
-            pygame.Rect(64,0,60,75), # green fish
-            pygame.Rect(0,78,63,75), # orange fish
-            pygame.Rect(0,237,40,58), # green jelly bean
-            pygame.Rect(0,405,40,58), # red jelly bean
-            pygame.Rect(170,190,40,58) # blue jelly bean
-        ]
+        self.sprite_positions = positions
 
     def get_sprites(self):
         return self.sprite_positions

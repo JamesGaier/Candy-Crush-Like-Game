@@ -5,9 +5,11 @@ A prototype that gives me an idea of how to build a Candy Crush/Bejeweled like g
 import sys
 import signal
 import pygame
+from candy_proto.engine.sheet_coords import candy_positions, cursor_positions
 from candy_proto.engine.sheet import SpriteSheet
-
-pygame.display.init()
+from candy_proto.game.board import Board
+from candy_proto.game.actor import Actor
+import random
 
 running = True
 def handler(_signum, _frame):
@@ -21,37 +23,47 @@ def handler(_signum, _frame):
 
 signal.signal(signal.SIGINT, handler)
 
+pygame.init()
+pygame.mouse.set_visible(False)
+pygame.display.set_caption("Candy Crush Prototype", icontitle="")
+
 WIDTH = 400
 HEIGHT = 560
 window = (WIDTH, HEIGHT)
+COLS = 10
+ROWS = 10
 TITLE = 'Candy Crush'
 screen = pygame.display.set_mode(window)
-
-sprite_sheet = SpriteSheet("res/candy_crush.png", window)
-background = pygame.Surface(window)
+sprite_sheet = SpriteSheet("res/candy_crush.png", window, candy_positions)
+board = Board(COLS, ROWS, sprite_sheet)
+cursor_sprite = SpriteSheet("res/cursor.png", (150,75), cursor_positions)
+cursor = Actor("res/cursor.png", cursor_positions, (0,0), (150, 75))
+background = pygame.image.load("res/background0.jpg")
+background = pygame.transform.scale(background, window)
 
 def draw():
     """
     Draws sprites to the screen
     """
-    screen.fill((255, 255, 255))
-    x_off = 0
-    for sprite in sprite_sheet.get_sprites():
-        screen.blit(sprite_sheet.get_sprite(sprite), (x_off,0))
-        x_off += sprite.width
+    screen.blit(background, (0,0))
+    board.draw(screen)
+    cursor.draw(screen)
     pygame.display.flip()
 
 def loop():
     """
     Runs the draw and update calls to handles game elements
     """
+    draw()
     global running
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
+            if event.type == pygame.MOUSEMOTION:
+                cursor.update(pygame.mouse.get_pos(), off=(-30, -10))
         draw()
+
 
 if __name__ == "__main__":
     loop()
