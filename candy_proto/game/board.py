@@ -51,6 +51,9 @@ class Board:
             
             if r == r2 and c == c2:
                 self.board[r1][c1], self.board[r2][c2] = self.board[r2][c2], self.board[r1][c1]
+                tmp = self.board[r1][c1][1].topleft  
+                self.board[r1][c1][1].topleft = self.board[r2][c2][1].topleft
+                self.board[r2][c2][1].topleft = tmp
                 
 
     def find_tile(self, pos):
