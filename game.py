@@ -62,6 +62,8 @@ def loop():
                 running = False
             if event.type == pygame.MOUSEMOTION:
                 cursor.update(pygame.mouse.get_pos(), off=(-30, -10))
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                board.register_click(pygame.mouse.get_pos(), screen)
         draw()
 
 
