@@ -13,7 +13,6 @@ class Board:
         self.selected_candy = []
         self.sprites = self.sprite_sheet.get_sprites()
         self.fill_board()
-        
 
     def fill_board(self):
         for r in range(self.rows):
@@ -27,7 +26,6 @@ class Board:
                 sprite = self.sprites[rand_candy]
                 self.board[r][c] = [rand_candy, pygame.Rect(c * sprite.width, r * sprite.height, sprite.width, sprite.height)]
 
-
     def draw(self, screen):
         for r in range(self.rows):
             for c in range(self.cols):
@@ -35,17 +33,11 @@ class Board:
                     sprite = self.sprites[self.board[r][c][0]]
                     screen.blit(self.sprite_sheet.get_sprite(sprite), self.board[r][c][1])
 
-
-    def update(self, screen):
-        pass
-
-
     def swap_cell(self, r1, c1, r2, c2):
         self.board[r1][c1], self.board[r2][c2] = self.board[r2][c2], self.board[r1][c1]
         tmp = self.board[r1][c1][1].topleft  
         self.board[r1][c1][1].topleft = self.board[r2][c2][1].topleft
         self.board[r2][c2][1].topleft = tmp
-
 
     # sliding window check if there is a match
     def drop_candy_col(self, col):
@@ -57,7 +49,6 @@ class Board:
                         self.board[r][col][0] = random.randint(0,2) 
                 lo = hi 
 
-
     def drop_candy_row(self, row):
         lo = 0
         for hi in range(len(self.board)):
@@ -67,14 +58,12 @@ class Board:
                         self.board[row][c][0] = random.randint(0,2)
                 lo = hi 
         
-    
     def check_matches(self, r1, c1, r2, c2):
         self.drop_candy_col(c1)
         self.drop_candy_col(c2)
         self.drop_candy_row(r1)
         self.drop_candy_row(r2)
         
-
     def swap_tiles(self, screen):
         r1, c1 = self.selected_candy[0] 
         r2, c2 = self.selected_candy[1] 
@@ -95,14 +84,12 @@ class Board:
                 self.swap_cell(r1, c1, r2, c2)
                 self.check_matches(r1, c1, r2, c2)
 
-
     def find_tile(self, pos):
         for r in range(len(self.board)):
             for c in range(len(self.board[r])):
                 if self.board[r][c] != None and self.board[r][c][1].collidepoint(pos):
                     return r,c
 
-    
     def register_click(self, pos, screen):
         tile = self.find_tile(pos)
         self.selected_candy.append(tile)

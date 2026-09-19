@@ -1,3 +1,6 @@
+"""
+Contains coordinates of sprites in the game
+"""
 import pygame
 
 candy_positions = [
