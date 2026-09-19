@@ -59,7 +59,7 @@ class Game:
 
                 # pylint: disable=E1101
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.board.register_click(pygame.mouse.get_pos(), self.screen)
+                    self.board.register_click(pygame.mouse.get_pos())
             self.draw()
 
     def handler(self, _signum, _frame):
