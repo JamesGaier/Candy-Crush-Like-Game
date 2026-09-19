@@ -11,61 +11,58 @@ from candy_proto.game.board import Board
 from candy_proto.game.actor import Actor
 import random
 
-running = True
-def handler(_signum, _frame):
-    """
-    Handles CTRL+C presses to exit the game
-    """
-    global running
-    print("CTRL+C received...")
-    running = False
-    sys.exit(0)
+class Game:
+    def __init__(self):
+        WIDTH = 400
+        HEIGHT = 560
+        window = (WIDTH, HEIGHT)
+        COLS = 10
+        ROWS = 10
+        TITLE = 'Candy Crush Prototype'
 
-signal.signal(signal.SIGINT, handler)
+        pygame.init()
+        pygame.mouse.set_visible(False)
+        pygame.display.set_caption(TITLE, icontitle="")
 
-pygame.init()
-pygame.mouse.set_visible(False)
-pygame.display.set_caption("Candy Crush Prototype", icontitle="")
+        self.screen = pygame.display.set_mode(window)
+        sprite_sheet = SpriteSheet("res/candy_crush.png", window, candy_positions)
+        self.board = Board(COLS, ROWS, sprite_sheet)
+        self.cursor = Actor("res/cursor.png", cursor_positions, (0,0), (150, 75))
+        self.background = pygame.image.load("res/background0.jpg")
+        self.background = pygame.transform.scale(self.background, window)
+        self.running = True
+        signal.signal(signal.SIGINT, self.handler)
+        
 
-WIDTH = 400
-HEIGHT = 560
-window = (WIDTH, HEIGHT)
-COLS = 10
-ROWS = 10
-TITLE = 'Candy Crush'
-screen = pygame.display.set_mode(window)
-sprite_sheet = SpriteSheet("res/candy_crush.png", window, candy_positions)
-board = Board(COLS, ROWS, sprite_sheet)
-cursor_sprite = SpriteSheet("res/cursor.png", (150,75), cursor_positions)
-cursor = Actor("res/cursor.png", cursor_positions, (0,0), (150, 75))
-background = pygame.image.load("res/background0.jpg")
-background = pygame.transform.scale(background, window)
+    def draw(self):
+        """
+        Draws sprites to the screen
+        """
+        self.screen.blit(self.background, (0,0))
+        self.board.draw(self.screen)
+        self.cursor.draw(self.screen)
+        pygame.display.flip()
 
-def draw():
-    """
-    Draws sprites to the screen
-    """
-    screen.blit(background, (0,0))
-    board.draw(screen)
-    cursor.draw(screen)
-    pygame.display.flip()
-
-def loop():
-    """
-    Runs the draw and update calls to handles game elements
-    """
-    draw()
-    global running
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEMOTION:
-                cursor.update(pygame.mouse.get_pos(), off=(-30, -10))
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                board.register_click(pygame.mouse.get_pos(), screen)
-        draw()
+    
+    def loop(self):
+        """
+        Runs the draw and update calls to handles game elements
+        """
+        while self.running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                if event.type == pygame.MOUSEMOTION:
+                    self.cursor.update(pygame.mouse.get_pos(), off=(-30, -10))
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.board.register_click(pygame.mouse.get_pos(), self.screen)
+            self.draw()
 
 
-if __name__ == "__main__":
-    loop()
+    def handler(self, _signum, _frame):
+        """
+        Handles CTRL+C presses to exit the game
+        """
+        print("CTRL+C received...")
+        self.running = False
+        sys.exit(0)
