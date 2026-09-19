@@ -113,6 +113,7 @@ class Board:
         if r2 < 0 or r2 >= len(self.board) or c2 < 0 or c2 >= len(self.board[r2]):
             return
 
+        #validates that a swap in up, down, left or right of the candy was made
         dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
 
         for dr, dc in dirs:
